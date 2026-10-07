@@ -40,6 +40,39 @@ test('RF-13 · el menú y el scroll suave siguen inicializándose', () => {
 });
 
 // ============================================
+// LECTURA INDEPENDIENTE DEL FIN DE LINEA
+// Con core.autocrlf en Windows el checkout entrega CRLF y los tests que
+// parten por '\n' o casan un encabezado contra un '\n' pelado fallarían
+// solo en esa máquina, así que readProjectFile normaliza a LF al leer
+// ============================================
+test('entorno · readProjectFile devuelve el fichero con LF y sin CR', () => {
+    ['index.html', 'css/styles.css', 'js/main.js',
+        'specs/002-rutas-sitio-oficial/spec.md', 'specs/003-galeria-hero-vertical/spec.md']
+        .forEach((fichero) => {
+            const contenido = readProjectFile(fichero);
+            assert.ok(
+                !contenido.includes('\r'),
+                `${fichero} llega con CR: el lector no está normalizando el final de línea`
+            );
+        });
+});
+
+test('entorno · el lector normaliza de verdad un fichero que tenga CRLF', () => {
+    // Se comprueba sobre el resultado de leer, no sobre un fichero inventado:
+    // si el checkout es LF, esta comprobación no puede observar nada, y si es
+    // CRLF es justo lo que tiene que quedar neutralizado
+    const crudo = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
+    const tieneCr = crudo.includes('\r');
+
+    assert.equal(readProjectFile('index.html').includes('\r'), false, 'la lectura no quita el CR');
+    assert.equal(readProjectFile('index.html').replace(/\r\n/g, '\n'), crudo.replace(/\r\n/g, '\n'),
+        'normalizar solo debe tocar el final de línea, no el contenido');
+    // Se registra cómo está el fichero en esta máquina, para que quede claro si
+    // la normalización se está poniendo a prueba o no
+    console.log(`      (index.html en disco: ${tieneCr ? 'CRLF' : 'LF'})`);
+});
+
+// ============================================
 // HERO SIN PARALLAX (Spec 003 · RF-14)
 // La galería del hero es su único movimiento, así que el JavaScript no se
 // mueve ni se declara nada nuevo para el hero

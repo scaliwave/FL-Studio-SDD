@@ -31,6 +31,7 @@ const columnas = getGalleryColumns(html);
 // ============================================
 
 // Filas de datos de una tabla Markdown del anexo de una spec
+// (readProjectFile ya normaliza a LF, asi que '\n' es suficiente)
 function filasDelAnexo(titulo, spec) {
     const bloque = spec.split('### ' + titulo)[1].split(/\n#{2,3} /)[0];
     return bloque.split('\n')

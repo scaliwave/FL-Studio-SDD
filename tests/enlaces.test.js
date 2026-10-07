@@ -10,6 +10,7 @@ const html = readProjectFile('index.html');
 const spec = readProjectFile('specs/002-rutas-sitio-oficial/spec.md');
 
 // Los siete destinos verificados de RF-2, leídos de la spec para no repetirlos a mano
+// (readProjectFile ya normaliza a LF, asi que '\n' es suficiente)
 const RUTAS = [...(spec.split('\n').find((linea) => linea.startsWith('- RF-2:')) || '')
     .matchAll(/([^:;→]+?)\s*→\s*`(https?:\/\/[^`]+)`/g)]
     .map((match) => ({ texto: match[1].trim(), url: match[2] }));

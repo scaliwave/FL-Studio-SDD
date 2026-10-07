@@ -8,8 +8,11 @@ const path = require('node:path');
 const PROJECT_ROOT = path.join(__dirname, '..');
 
 // --- ÚNICA parte con E/S: leer un fichero del proyecto ---
+// Normaliza CRLF a LF al leer: con core.autocrlf el checkout de Windows
+// entrega los ficheros con \r\n, y los tests que parten por '\n' (o casan
+// un encabezado contra un \n pelado) fallarian solo en esa maquina.
 function readProjectFile(name) {
-    return fs.readFileSync(path.join(PROJECT_ROOT, name), 'utf8');
+    return fs.readFileSync(path.join(PROJECT_ROOT, name), 'utf8').replace(/\r\n/g, '\n');
 }
 
 // ============================================
