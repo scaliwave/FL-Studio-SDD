@@ -76,6 +76,7 @@ Dev/
 
 ## Reglas
 - Lee `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código. 
+- **Nunca hagas `git commit` ni `git push` sin autorización explícita del usuario en la conversación.** Antes, entrégale un resumen de lo implementado (qué cambió, en qué ficheros, resultado de `node --test`) y el **nombre del commit** que propone, y **espera su confirmación**. Ni siquiera el commit local: la razón es que sobre un commit ya creado cualquier ajuste posterior obliga a enmendar o a un force-push, así que la frontera se pone antes, donde revertir es gratis. Mientras no se aprueba, los cambios **se quedan sin commitear en el working tree**, que es exactamente donde `git checkout` los devuelve intactos. Si el usuario pide un ajuste tras aprobar, se corrige en el working tree y se le propone el cambio al commit, sin rehacer historia ya publicada. 
 
 ## Testing
 - Tests automatizados con el runner incluido en Node: `node --test` (ficheros en `tests/`, sin dependencias).

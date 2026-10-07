@@ -67,6 +67,19 @@ Diseño mobile-first con cortes en **768px** y **480px**, y sin scroll horizonta
 
 La altura de la tarjeta la decide si el dispositivo tiene puntero, no el ancho: con puntero es solo la imagen (proporción 4:3); sin puntero, la imagen más una banda de texto de 44 px.
 
+## Git
+
+Hay un `origin` apuntando a `https://github.com/scaliwave/FL-Studio-SDD.git` y `main` sigue a `origin/main`.
+
+```bash
+node --test          # antes de proponer el commit
+git add -A
+git commit -m "..."
+git push
+```
+
+**Ni el commit ni el push sin permiso.** Antes de commitear hay que revisar el resumen de lo implementado y el nombre del commit propuesto, y esperar a que alguien lo confirme. Los cambios se quedan sin commitear hasta entonces. Está escrito en [`AGENTS.md`](AGENTS.md) y en el principio 7 de [`docs/constitution.md`](docs/constitution.md).
+
 ## Cómo se trabaja aquí
 
 El flujo es el de **Spec-Driven Development**, y las reglas completas están en [`docs/constitution.md`](docs/constitution.md):
@@ -77,7 +90,7 @@ El flujo es el de **Spec-Driven Development**, y las reglas completas están en 
 4. `/sdd-implement` implementa **una** tarea, con los tests primero.
 5. `/sdd-validate` revisa la implementación contra cada requisito de la spec.
 
-Principios que no se rompen: stack simple sin dependencias, `AGENTS.md` siempre al día respecto al código, lógica y presentación separadas, tests solo con `node --test`, sin datos personales y documentación en español.
+Principios que no se rompen: stack simple sin dependencias, `AGENTS.md` siempre al día respecto al código, lógica y presentación separadas, tests solo con `node --test`, sin datos personales, documentación en español, y nada registrado ni publicado sin autorización.
 
 Antes de tocar código hay que leer `docs/constitution.md` y la spec activa en `specs/`.
 
