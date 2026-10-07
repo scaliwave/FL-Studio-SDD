@@ -1,0 +1,1184 @@
+/* ============================================
+   FL STUDIO FLEX - LANDING PAGE
+   Paleta: Negros (#0a0a0a, #111111) + Verdes (#00ff88, #39ff14)
+   ============================================ */
+
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-tertiary: #1a1a1a;
+    --accent-primary: #00ff88;
+    --accent-secondary: #39ff14;
+    --accent-dark: #003b1f;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #888888;
+    --border-color: #2a2a2a;
+    --glow-color: rgba(0, 255, 136, 0.3);
+    --glow-strong: rgba(0, 255, 136, 0.6);
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --font-primary: 'Inter', sans-serif;
+    --font-display: 'Orbitron', sans-serif;
+    /* Capa de degradado y sombra de texto del hero: solo opacidad y sombra, ningún tono nuevo (RF-N3) */
+    --overlay-rgb: 10 10 10;
+    --overlay-opacity: 0.72;
+    --overlay-opacity-edge: 0.35;
+    --shadow-color: rgba(0, 0, 0, 0.9);
+    --shadow-hero: 0 2px 14px var(--shadow-color);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-medium);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.logo-icon {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    text-shadow: 0 0 10px var(--glow-color);
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-primary);
+    transition: var(--transition-fast);
+}
+
+.nav-links a:hover {
+    color: var(--accent-primary);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: var(--transition-fast);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* ============================================
+   GALERÍA VERTICAL DEL HERO
+   Fondo completo con cuatro columnas de tarjetas que suben sin parar,
+   cada una a una velocidad distinta. Todo es CSS, sin JavaScript (RF-N2).
+   ============================================ */
+.hero-gallery {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    pointer-events: none;
+}
+
+.hero-gallery__column {
+    overflow: hidden;
+}
+
+/* La pista lleva dos veces el grupo de tarjetas: al subir la mitad de su propia
+   altura, la vuelta no tiene costura (RF-4) */
+.hero-gallery__track {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    animation: hero-rise var(--d) linear infinite;
+}
+
+/* Una duración distinta por columna, entre 25 y 50 segundos como en FL Cloud (RF-5) */
+.hero-gallery__column--1 { --d: 30s; }
+.hero-gallery__column--2 { --d: 34s; }
+.hero-gallery__column--3 { --d: 38s; }
+.hero-gallery__column--4 { --d: 42s; }
+
+@keyframes hero-rise {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+}
+
+/* Proporción 4:3 con recorte centrado: las seis capturas encajan casi enteras y las
+   miniaturas cuadradas pierden solo los bordes, que es lo que no importa (RF-12).
+   La altura sale de la proporción, así que las tarjetas se ven aunque no haya animación (RF-21) */
+.hero-gallery__item {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+}
+
+.hero-gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* La galería se detiene SOLO con el teclado, nunca con el puntero: el hero ocupa
+   la primera pantalla entera, así que con `:hover` estaría congelada en el uso
+   normal, que es justo lo contrario de lo que se busca (RF-15) */
+.hero:focus-within .hero-gallery__track {
+    animation-play-state: paused;
+}
+
+/* Capa de degradado: el alfa va en el color de cada tramo y no en `opacity`,
+   para poder distinguir el tramo central, el que protege el texto, del resto (RF-9) */
+.hero-gallery__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        rgb(var(--overlay-rgb) / var(--overlay-opacity-edge)) 0%,
+        rgb(var(--overlay-rgb) / var(--overlay-opacity)) 35%,
+        rgb(var(--overlay-rgb) / var(--overlay-opacity)) 65%,
+        rgb(var(--overlay-rgb) / var(--overlay-opacity-edge)) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-shadow: var(--shadow-hero);
+}
+
+.title-line {
+    display: block;
+    text-shadow: var(--shadow-hero);
+}
+
+/* El brillo verde del título era decoración animada: la galería es ahora el único
+   movimiento del hero (RF-13). El color de acento se conserva, y la sombra de texto
+   sobre el fondo en movimiento la añade --shadow-hero en T5 (RF-9) */
+.title-line.accent {
+    color: var(--accent-primary);
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    text-shadow: var(--shadow-hero);
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: var(--transition-fast);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    box-shadow: 0 0 20px var(--glow-color);
+    text-shadow: var(--shadow-hero);
+}
+
+.btn-primary:hover {
+    background: var(--accent-secondary);
+    box-shadow: 0 0 30px var(--glow-strong);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    text-shadow: var(--shadow-hero);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+.btn-large {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================
+   SCROLL INDICATOR
+   ============================================ */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    /* RF-9 lo pide sobre el indicador, pero el indicador solo contiene la flecha:
+       no hay texto que sombrear, así que la sombra no se ve. Se conserva para no
+       apartarse del requisito. */
+    text-shadow: var(--shadow-hero);
+}
+
+/* La flecha se queda quieta: con el fondo moviéndose a distintas velocidades,
+   un rebote añadiría ruido (RF-13) */
+.scroll-arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 2px solid var(--accent-primary);
+    border-bottom: 2px solid var(--accent-primary);
+    transform: rotate(45deg);
+}
+
+/* ============================================
+   SECTIONS GENERALES
+   ============================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+section {
+    padding: 6rem 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-title .accent {
+    color: var(--accent-primary);
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   SINTETIZADORES SECTION
+   ============================================ */
+.synths-section {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-intro {
+    max-width: 720px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   FRANJAS ANIMADAS DE INSTRUMENTOS Y EFECTOS
+   ============================================ */
+.strip {
+    --strip-gap: 16px;
+    --strip-card-width: 220px;
+    /* La tarjeta es la imagen oficial a sangre, así que su alto sale de la
+       proporción 4:3 de la imagen (el ancho × 3/4), no de lo que ocupe el
+       texto: 220 → 165 px. Lo fija la tabla de RF-25, por rangos más abajo */
+    --strip-card-height: 165px;
+    /* Banda de texto de la rama sin puntero: dos líneas de 20 px más 4 px de aire */
+    --strip-band-height: 44px;
+    --strip-duration: 30s;
+    position: relative;
+}
+
+/* Encabezado de cada franja: distingue los instrumentos de los efectos (RF-8) */
+#strip-instrumentos,
+#strip-efectos {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+/* La franja recorta su propia fila: la página nunca se desplaza lateralmente (RF-9, RF-17) */
+.strip-scroll {
+    overflow: hidden;
+}
+
+/* Pista más ancha que la pantalla, sin relleno horizontal para que la vuelta sea continua */
+.strip-track {
+    display: flex;
+    align-items: stretch;
+    gap: var(--strip-gap);
+    width: max-content;
+    padding: 0.5rem 0;
+}
+
+/* La lista está duplicada: al translatedor la mitad de la pista, la vuelta no tiene huecos */
+@keyframes strip-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+@keyframes strip-right {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+}
+
+.strip--instrumentos .strip-track { animation: strip-left var(--strip-duration) linear infinite; }
+.strip--efectos .strip-track { animation: strip-right var(--strip-duration) linear infinite; }
+
+/* Pausa con el puntero y con el teclado: al reanudar sigue desde el mismo punto (RF-10) */
+.strip:hover .strip-track,
+.strip:focus-within .strip-track { animation-play-state: paused; }
+
+/* La tarjeta es solo la imagen: alto fijo, sin relleno y con recorte, para que la
+   imagen vaya a sangre y para que el bloque de texto, al ser absoluto, no la
+   empuje al aparecer (RF-22, RF-24, RF-25) */
+.strip-card {
+    flex: 0 0 var(--strip-card-width);
+    position: relative;
+    height: var(--strip-card-height);
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+    transition: var(--transition-medium);
+}
+
+.strip-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--glow-color);
+}
+
+/* El enlace ocupa toda la tarjeta para que la imagen pueda llenar el alto.
+   La tarjeta sin enlace (3xOSC) no es un <a>: no entra en el recorrido del
+   teclado (RF-16) */
+.strip-card__link {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.strip-card__link:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: -2px;
+}
+
+/* Imagen oficial del instrumento o del efecto (referenciada por URL, RF-N4).
+   Llena la tarjeta y crece un 6 % al interactuar, desde abajo: el borde superior
+   es el que sube. Con translateY se abriría un hueco arriba, porque la imagen
+   mide justo el alto de la tarjeta */
+.strip-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--bg-secondary);
+    transition: transform var(--transition-fast);
+    transform-origin: bottom center;
+}
+
+.strip-card:hover .strip-card__image {
+    transform: scale(1.06);
+}
+
+/* Nombre legible: 16 px de fuente y 20 px de línea, por encima de los mínimos (RF-18).
+   Sin min-height: la altura ya no la da el contenido (RF-25) y, con el bloque de
+   texto en una banda de 44 px, reservar dos líneas para el aviso lo desbordaría */
+.strip-card__name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    color: var(--text-primary);
+}
+
+/* El aviso vive dentro del bloque de texto, así que no necesita su propia
+   opacidad: se revela entero con el bloque */
+.strip-card__notice {
+    font-size: 0.7rem;
+    line-height: 1rem;
+    color: var(--text-muted);
+}
+
+/* Bloque de texto de la tarjeta: el nombre y el aviso juntos, sobre la parte
+   baja de la imagen. Está fuera del flujo para que la tarjeta no cambie de alto
+   al aparecer, y se esconde solo visualmente con opacity, nunca con visibility
+   ni con display, para que siga disponible para los lectores de pantalla
+   (RF-14, RF-22, RF-24) */
+.strip-card__meta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-tertiary);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+/* El revelado se decide sobre la tarjeta y no sobre el enlace, así que la
+   tarjeta de 3xOSC, que no es un <a>, también muestra su nombre con el puntero.
+   Con el teclado solo hay enlace, y se revela con :focus-visible (RF-23, RF-26) */
+.strip-card:hover .strip-card__meta,
+.strip-card__link:focus-visible .strip-card__meta {
+    opacity: 1;
+}
+
+/* Las copias de relleno existen para el bucle y no se pulsan (RF-6, RF-7) */
+.strip-card--filler {
+    pointer-events: none;
+}
+
+/* Guarda de las copias de relleno, DESPUÉS de las reglas de revelado a propósito:
+   con la misma especificidad gana la última, y la suya es mayor. Sin esto, una
+   copia mostró su nombre repetido por encima de la imagen al pasar el puntero o
+   al detenerse la franja encima (RF-26).
+   No hace falta una copia dentro de @media (hover: none): allí el bloque de texto
+   es visible por defecto, pero esta regla tiene especificidad 0,3,0 y la del bloque
+   0,1,0, así que gana también sin ser posterior */
+.strip-card.strip-card--filler .strip-card__meta {
+    opacity: 0;
+}
+
+/* ============================================
+   FRANJAS EN DISPOSITIVOS SIN PUNTERO
+   Aquí no existe :hover, así que el nombre se ve siempre en una banda sólida bajo
+   la imagen y el aviso aparece al tocar, que es como los navegadores móviles
+   aplican el primer toque (RF-24). La tarjeta mide la imagen más la banda: 209 px
+   a 1280, 137 px a 640 y 110 px a 375 (RF-25).
+   Va antes del bloque de reducir movimiento, que es el último de los que mandan
+   sobre el movimiento de la hoja; detrás de él solo queda el de imprimir. */
+@media (hover: none) {
+    .strip-card {
+        height: calc(var(--strip-card-height) + var(--strip-band-height));
+    }
+
+    /* La imagen mide solo su parte: si se quedara al 100 % se comería la
+       tarjeta entera y la banda se saldría por debajo, recortada */
+    .strip-card__image {
+        height: var(--strip-card-height);
+    }
+
+    /* La banda mide lo que dice la tabla de RF-25 y el nombre va centrado: así
+       caben dos líneas de 20 px más 4 px de aire, que es lo que necesitan los
+       nombres más largos, y la tarjeta queda recta con cualquier nombre */
+    .strip-card__meta {
+        position: relative;
+        height: var(--strip-band-height);
+        padding: 0 0.5rem;
+        justify-content: center;
+        opacity: 1;
+    }
+
+    .strip-card__name {
+        opacity: 1;
+    }
+
+    /* El aviso no cabe en la banda al lado del nombre, así que se dibuja justo
+       encima de ella, sobre la imagen, con su propio fondo: se revela al tocar o
+       al enfocar con el teclado y la banda no crece (RF-24).
+       Se limita al alto de la imagen porque a 375 px la tarjeta mide 88 px de
+       ancho y el texto del aviso no cabe entero: sin este tope se saldría de la
+       tarjeta, que la recorta */
+    .strip-card__notice {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 100%;
+        max-height: var(--strip-card-height);
+        padding: 0.25rem 0.5rem;
+        background: var(--bg-tertiary);
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    .strip-card:hover .strip-card__notice,
+    .strip-card__link:focus-visible .strip-card__notice {
+        opacity: 1;
+    }
+}
+
+/* Logotipo oficial de FL Studio (imagen remota, RF-16) */
+.logo-image {
+    height: 30px;
+    width: auto;
+    display: block;
+}
+
+/* Placeholders SVG compartidos por galería y sintetizadores */
+.placeholder-image {
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+}
+
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0.6;
+}
+
+.placeholder-icon {
+    width: 120px;
+    height: 120px;
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    transform: scaleX(0);
+    transition: var(--transition-medium);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 40px var(--glow-color);
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.feature-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   GALLERY SECTION
+   ============================================ */
+.gallery-section {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    aspect-ratio: 4/3;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    transition: var(--transition-medium);
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: var(--transition-medium);
+}
+
+/* La etiqueta se coloca encima del icono: siempre visible y sin
+   solaparse con la descripción del overlay */
+.gallery-item .placeholder-content {
+    position: relative;
+}
+
+.gallery-item .placeholder-content span {
+    position: absolute;
+    bottom: calc(100% + 0.75rem);
+    left: 0;
+    right: 0;
+    font-weight: 600;
+}
+
+/* El label del placeholder nombra la parte de FL Studio y ya está visible:
+   el overlay solo añade la descripción al pasar el ratón */
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-overlay p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* En dispositivos táctiles no existe :hover: se muestra el overlay siempre */
+@media (hover: none) {
+    .gallery-overlay {
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   DOWNLOAD SECTION
+   ============================================ */
+.download-section {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.download-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.download-content {
+    position: relative;
+    z-index: 1;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.download-note {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 4rem 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-brand p {
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    max-width: 300px;
+}
+
+.footer h4 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.footer-links ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--accent-primary);
+}
+
+/* El bloque "Sitio oficial" reutiliza los estilos de .footer-links: solo añade su icono ↗ */
+.footer-official .external-icon {
+    width: 14px;
+    height: 14px;
+    margin-left: 4px;
+    vertical-align: -2px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+}
+
+.social-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.social-icon:hover {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: var(--transition-slow);
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    /* De 481 a 768 px se ven 3 columnas, más anchas, y la cuarta se oculta (RF-2).
+       La galería va a sangre, así que el hueco reparte el ancho útil del hero (RF-10) */
+    .hero-gallery {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .hero-gallery__column--4 {
+        display: none;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0.5rem 0;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li a {
+        display: block;
+        padding: 0.9rem 2rem;
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .hero {
+        padding: 4rem 1rem 3rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* A 640 px, con la franja detenida, se ven siempre tres tarjetas originales
+       completas: hacen falta cuatro para que la última no dependa de dónde pare
+       la franja (4 × 124 + 3 × 16 = 544 px de los 561 útiles, RF-18) */
+    .strip {
+        --strip-card-width: 124px;
+        --strip-card-height: 93px;
+    }
+
+    .section-intro {
+        margin-bottom: 2rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-brand p {
+        max-width: none;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+
+    .download-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    /* A 480 px o menos se ven 2 columnas y las dos sobrantes se ocultan (RF-2) */
+    .hero-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .hero-gallery__column--3,
+    .hero-gallery__column--4 {
+        display: none;
+    }
+
+    /* A 375 px, con la franja detenida, se ven siempre dos tarjetas originales
+       completas: hacen falta tres para que no dependan de la posición de parada
+       (3 × 88 + 2 × 8 = 280 px de los 296 útiles, RF-18) */
+    .strip {
+        --strip-gap: 8px;
+        --strip-card-width: 88px;
+        --strip-card-height: 66px;
+    }
+
+    .strip-card__name {
+        font-size: 0.95rem;
+    }
+
+    /* Aviso corto en móvil (RF-27): en una tarjeta de 88 px el aviso completo
+       necesita 104 px de alto y sale truncado, así que aquí solo se ve «se abre en
+       una pestaña nueva» y el prefijo «Ver en image-line.com ·» se esconde.
+       Se esconde con la técnica de recorte a un píxel, no con display: none ni con
+       visibility: hidden, porque esas dos lo sacarían del árbol accesible y RF-14
+       exige que el texto completo siga disponible para los lectores de pantalla.
+       El rango es por ancho de pantalla, no por falta de puntero: una tableta
+       táctil a 768 px tiene sitio de sobra y sigue viendo el aviso entero */
+    .strip-card__notice-prefix {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .btn-large {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   REDUCIR MOVIMIENTO
+   Un solo bloque para toda la hoja (RF-17): anula las franjas y la galería.
+   Los selectores son los mismos que asignan la animación, porque un media query
+   no suma especificidad: con `.strip-track` o `.hero-gallery__track` a secas perdían
+   En el hero no queda ninguna zona desplazable: atraparía el scroll de la página (RF-16)
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .hero-gallery__column--1 .hero-gallery__track,
+    .hero-gallery__column--2 .hero-gallery__track,
+    .hero-gallery__column--3 .hero-gallery__track,
+    .hero-gallery__column--4 .hero-gallery__track {
+        animation: none;
+        transform: none;
+    }
+
+    .strip--instrumentos .strip-track,
+    .strip--efectos .strip-track {
+        animation: none;
+        transform: none;
+    }
+
+    .strip-scroll {
+        overflow-x: auto;
+    }
+}
+
+/* ============================================
+   IMPRESIÓN
+   Al imprimir no sale el bloque de decoración del hero, con la galería y sus
+   66 imágenes dentro; el hero conserva su título y su texto (RF-20)
+   ============================================ */
+@media print {
+    .hero-bg {
+        display: none;
+    }
+}
