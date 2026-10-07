@@ -19,11 +19,14 @@ const spec = readProjectFile('specs/002-rutas-sitio-oficial/spec.md');
 
 // Filas de una tabla del anexo, ya sin cabeceras y sin las comillas del código
 function leerTablaDelAnexo(titulo) {
-    const bloque = spec.match(new RegExp(`### ${titulo}\\n([\\s\\S]*?)(?=\\n#{2,3} )`));
+    // \r? antes de cada salto: con core.autocrlf el checkout trae CRLF y el
+    // titulo ya no estaria pegado a un \n pelado
+    const bloque = spec.match(new RegExp(`### ${titulo}\\r?\\n([\\s\\S]*?)(?=\\r?\\n#{2,3} )`));
     assert.ok(bloque, `el anexo de la spec no tiene el apartado "${titulo}"`);
 
     return bloque[1]
         .split('\n')
+        .map((linea) => linea.replace(/\r$/, ''))
         .filter((linea) => linea.trim().startsWith('|') && !/^(\|[\s|:-]*)+$/.test(linea.trim()))
         .slice(1)
         .map((fila) => fila.split('|').slice(1, -1).map((celda) => celda.trim().replace(/`/g, '')));
